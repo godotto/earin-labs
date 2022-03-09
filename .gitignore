@@ -1,0 +1,9 @@
+# Visual Studio Code configs
+.vscode/
+
+# venv directories and files
+lib/
+lib64
+bin/
+include/
+pyvenv.cfg
