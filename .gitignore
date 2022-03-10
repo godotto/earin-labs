@@ -7,3 +7,6 @@ lib64
 bin/
 include/
 pyvenv.cfg
+
+# Python's cache
+__pycache__/
