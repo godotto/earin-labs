@@ -44,10 +44,13 @@ class StoppingCriterion:
             self.stopping_criterion = self.__desired_val_mode
     
 
-    def __max_iteration_mode(self):
+    def __max_iteration_mode(self, __current_value):
         """
         Stops further operation of an optimization method when number of iterations
         reaches maximal number of iterations.
+
+        Parameter:
+        __current_value: only for compatibility reasons
         """
         if self.__counter < self.__max_iteration:
             self.__counter += 1
@@ -56,7 +59,7 @@ class StoppingCriterion:
             return True
 
     # TODO: maybe some kind of asynchronous function?
-    def __max_time_mode(self):
+    def __max_time_mode(self, __current_value):
         pass
 
     def __desired_val_mode(self, current_value):
