@@ -1,7 +1,6 @@
 import stopping_criterion as sc
 import objective_functions as of
 
-# NOTE: implemented and tested only for F(x)
 def gradient_descent(starting_point, objective_function, coefficients, gradient, step_size, stopping_criterion_mode, stopping_criterion_value):
     """
     Returns solution x and value at this point found by
