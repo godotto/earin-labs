@@ -1,7 +1,8 @@
 import stopping_criterion as sc
+import objective_functions as of
 
-# NOTE: implemented and tested only for functions returning scalars
-def gradient_descent(starting_point, objective_function, gradient, step_size, stopping_criterion_mode, stopping_criterion_value):
+# NOTE: implemented and tested only for F(x)
+def gradient_descent(starting_point, objective_function, coefficients, gradient, step_size, stopping_criterion_mode, stopping_criterion_value):
     """
     Returns solution x and value at this point found by
     gradient descent method.
@@ -9,6 +10,7 @@ def gradient_descent(starting_point, objective_function, gradient, step_size, st
     Parameters:
     starting_point: x_0, point from which algorithm starts to operate
     objective_function: function that is being analysed
+    coefficients: objective function coefficients
     gradient: gradient of analyzed function
     step_size: value by which antigradient is being scaled when new point is calculated
     stopping_criterion_mode: stopping mode given as StoppingMode enum
@@ -19,10 +21,10 @@ def gradient_descent(starting_point, objective_function, gradient, step_size, st
 
     x = starting_point
     stopping_criterion = sc.StoppingCriterion(stopping_criterion_mode, stopping_criterion_value)
-    current_value = objective_function(x)
+    current_value = objective_function(x, coefficients)
 
     while not stopping_criterion.stopping_criterion(current_value):
-        x = x - step_size * gradient(x)
-        current_value = objective_function(x)
+        x = x - step_size * gradient(x, coefficients)
+        current_value = objective_function(x, coefficients)
 
     return x, current_value
