@@ -27,3 +27,6 @@ def gradient_descent(starting_point, objective_function, coefficients, gradient,
         current_value = objective_function(x, coefficients)
 
     return x, current_value
+
+def newtons_method():
+    pass
