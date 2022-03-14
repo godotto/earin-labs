@@ -3,6 +3,7 @@ import os
 
 import optimization_methods as om
 import objective_functions as of
+import user_input as uin
 
 
 def clear_console():
@@ -32,7 +33,7 @@ def select_optimization_method():
         print("Optimization methods:")
         print("1. Gradient descent")
         print("2. Newton's method")
-        method = int(input("Choose method: "))
+        method = uin.integer_input("Choose method: ")
 
         if method != 1 and method != 2:
             print("Wrong option")
@@ -54,7 +55,7 @@ def select_objective_function():
         print("Functions to optimize:")
         print("1. F(x) = ax^3 + bx^2 + cx + d")
         print("2. G(x) = c + b^(T)x + x^(T)Ax")
-        function = int(input("Choose function: "))
+        function = uin.integer_input("Choose function: ")
 
         if function != 1 and function != 2:
             print("Wrong option")
