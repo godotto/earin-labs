@@ -29,4 +29,5 @@ def gradient_descent(starting_point, objective_function, coefficients, gradient,
     return x, current_value
 
 def newtons_method():
+    # TODO Newton's method implementation
     pass
