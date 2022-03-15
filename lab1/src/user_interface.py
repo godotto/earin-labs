@@ -6,6 +6,7 @@ import numpy as np
 import optimization_methods as om
 import objective_functions as of
 import user_input as uin
+from stopping_criterion import StoppingMode
 
 
 def clear_console():
@@ -241,9 +242,28 @@ def select_starting_point(objective_function, coefficients):
 
     return x_0
 
+def select_stopping_criterion():
+    clear_console()
+    criterion = 0
+    while criterion != 1 and criterion != 2 and criterion != 3:
+        print("Stopping criterion:")
+        print("1. Maximal number of iterations")
+        print("2. Maximal computation time")
+        print("3. Compute until desired value is reached")
+        criterion = uin.integer_input("Choose method: ")
+
+        if criterion != 1 and criterion != 2 and criterion != 3:
+            print("Wrong option")
+            sleep(1)
+            clear_console()
+
+    return StoppingMode(criterion)
 
 def user_interface():
     optimization_method = select_optimization_method()
     objective_function, gradient = select_objective_function()
     coefficients = select_parameters(objective_function)
-    # TODO: starting point definition and stopping criterion selection
+    starting_point = select_starting_point(objective_function, coefficients)
+    stopping_criterion_mode = select_stopping_criterion()
+
+user_interface()
