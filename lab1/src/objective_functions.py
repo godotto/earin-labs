@@ -55,3 +55,22 @@ def g_x_gradient(x, coefficients):
         raise ValueError("Given matrix is not positive-definitive")
 
     return (coefficients['b'] + coefficients['A'] @ x + coefficients['A'].T @ x)
+
+
+def f_x_1st_derivative_coefficients (coefficients):
+    coefficients=(coefficients['d'], coefficients['c'], coefficients['b'],coefficients['a'])
+    return  np.polynomial.polynomial.polyder(coefficients, 1)
+   # return der_coefficients[2] * x ** 2 + der_coefficients[1] * x  + der_coefficients[0]
+
+def f_x_2nd_derivative_coefficients (coefficients):
+    coefficients=(coefficients['d'], coefficients['c'], coefficients['b'],coefficients['a'])
+    return np.polynomial.polynomial.polyder(coefficients, 2)
+   # return der_coefficients[1] * x  + der_coefficients[0]
+
+
+def f_x_derivative_result(x, first_derivative_coefficients, second_derivative_coefficients):
+    first_derivative_of_x = first_derivative_coefficients[2] * x ** 2 + first_derivative_coefficients[1] * x  + first_derivative_coefficients[0] 
+    second_derivative_of_x = second_derivative_coefficients[1] * x  + second_derivative_coefficients[0]
+
+    return first_derivative_of_x/second_derivative_of_x
+
