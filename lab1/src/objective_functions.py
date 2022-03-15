@@ -1,5 +1,4 @@
 import numpy as np
-import auxiliary_functions as af
 
 def f_x(x, coefficients):
     """
@@ -35,9 +34,6 @@ def g_x(x, coefficients):
     x: argument passed to G(x)
     coefficients: dictionary of function's coefficients.
     """
-    if not af.is_positive_definite(coefficients['A']):
-        raise ValueError("Given matrix is not positive-definitive")
-    
     return (coefficients['c'] + coefficients['b'].T @ x + x.T @ coefficients['A'] @ x)[0][0]
 
 def g_x_gradient(x, coefficients):
@@ -51,9 +47,6 @@ def g_x_gradient(x, coefficients):
     x: argument passed to function's gradient
     coefficients: dictionary of function's coefficients.
     """
-    if not af.is_positive_definite(coefficients['A']):
-        raise ValueError("Given matrix is not positive-definitive")
-
     return (coefficients['b'] + coefficients['A'] @ x + coefficients['A'].T @ x)
 
 def f_x_derivative_result(x, coefficients):
