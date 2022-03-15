@@ -43,6 +43,20 @@ def float_input(prompt = ""):
     except ValueError:
         return False
 
+def int_list_input(prompt = ""):
+    """
+    Takes input from stdin and checks if
+    it is a proper list of integers. Returns 
+    an empty list if it is not.
+
+    Parameters:
+    prompt: prompt message for user input.
+    """
+    try:
+        return [int(x) for x in input(prompt).split()]
+    except ValueError:
+        return []
+
 def is_positive_definite(A):
     """
     Checks if given matrix is positive-definite.

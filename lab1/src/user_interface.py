@@ -174,6 +174,73 @@ def select_parameters(objective_function):
 
     return coefficients
 
+def select_starting_point(objective_function, coefficients):
+    clear_console()
+    method = 0
+    while method != 1 and method != 2:
+        print("Selection of starting point:")
+        print("1. Manual")
+        print("2. Random from uniform distribution")
+        method = uin.integer_input("Choose method: ")
+
+        if method != 1 and method != 2:
+            print("Wrong option")
+            sleep(1)
+            clear_console()
+
+    if method == 1:
+        if objective_function == of.f_x:
+            clear_console()
+            x_0 = 0
+            while not x_0:
+                print("Provide a scalar starting point:")
+                x_0 = uin.float_input()
+
+                if not x_0:
+                    print("Coefficient has to be a number")
+                    sleep(1)
+                    clear_console()
+        else:
+            x_0 = []
+            while len(x_0) != coefficients['d']:
+                print(f"Provide {coefficients['d']} elements of a starting point vector")
+                x_0 = uin.float_list_input("<separate them with spaces>: ")
+
+                if len(x_0) == 0:
+                    print("At least one element is wrong")
+                    sleep(1)
+                    clear_console()
+                elif len(x_0) != coefficients['d']:
+                    print("Wrong number of elements")
+                    sleep(1)
+                    clear_console()
+    else:
+        random_range = []
+        while len(random_range) != 2:
+            print(f"Select range of numbers for uniform distribution (lower first)")
+            random_range = uin.int_list_input("<separate them with spaces>: ")
+
+            if len(random_range) == 0:
+                print("At least one element is wrong")
+                sleep(1)
+                clear_console()
+            elif len(random_range) != 2:
+                print("Wrong number of elements")
+                sleep(1)
+                clear_console()
+            elif random_range[0] >= random_range[1]:
+                print("Lower boundary cannot be higher or equal to the higher boundary")
+                sleep(1)
+                clear_console()
+                random_range = []
+
+        if objective_function == of.f_x:
+            x_0 = np.random.uniform(random_range[0], random_range[1])
+        else:
+            x_0 = np.random.uniform(random_range[0], random_range[1], (1, coefficients['d'])).T
+
+    return x_0
+
 
 def user_interface():
     optimization_method = select_optimization_method()
