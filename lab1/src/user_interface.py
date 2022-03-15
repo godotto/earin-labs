@@ -25,7 +25,7 @@ def clear_console():
 
 def select_optimization_method():
     """
-    Promps the user to choose method of optimalization.
+    Prompts the user to choose method of optimalization.
 
     Output:
     function from the optimization_methods module.
@@ -47,7 +47,7 @@ def select_optimization_method():
 
 def select_objective_function():
     """
-    Promps the user to choose function for optimization.
+    Prompts the user to choose function for optimization.
 
     Output:
     functions from objective_functions module.
@@ -69,7 +69,7 @@ def select_objective_function():
 
 def select_parameters(objective_function):
     """
-    Promps the user to provide parameters for selected
+    Prompts the user to provide parameters for selected
     objective function.
 
     Parameters:
@@ -176,6 +176,17 @@ def select_parameters(objective_function):
     return coefficients
 
 def select_starting_point(objective_function, coefficients):
+    """
+    Prompts the user to provide starting point for the
+    selected method of optimization.
+
+    Parameters:
+    objective_function: handle to one of the objective functions
+    coefficients: dictionary of coefficients for the selected objective functions
+
+    Output:
+    x_0: starting point for the selected method, in form of scalar or vector.
+    """
     clear_console()
     method = 0
     while method != 1 and method != 2:
@@ -243,6 +254,13 @@ def select_starting_point(objective_function, coefficients):
     return x_0
 
 def select_stopping_criterion():
+    """
+    Prompts the user to select one of the three available
+    stopping criterions.
+
+    Output:
+    enumeration value from StoppingMode enumeration.
+    """
     clear_console()
     criterion = 0
     while criterion != 1 and criterion != 2 and criterion != 3:
@@ -259,11 +277,53 @@ def select_stopping_criterion():
 
     return StoppingMode(criterion)
 
+def select_stopping_value(stopping_criterion_mode):
+    """
+    Prompts the user to provide stopping value
+    for the selected stopping criterion.
+
+    Parameters:
+    stopping_criterion_mode: enumeration value from StoppingMode enumeration
+
+    Output:
+    stopping_value: stopping value for the selected method of stopping.
+    """
+    stopping_value = 0
+    clear_console()
+    if stopping_criterion_mode == StoppingMode.MAX_ITERATION:
+        while stopping_value < 1 or not stopping_value:
+            print("Provide maximal number of algorithm's iteration:")
+            stopping_value = uin.integer_input()
+
+            if stopping_value < 1 or not stopping_value:
+                print("It has to be a positive integer")
+                sleep(1)
+                clear_console()
+    elif stopping_criterion_mode == StoppingMode.MAX_TIME:
+        while stopping_value < 0 or not stopping_value:
+            print("Provide maximal time of computation (in seconds):")
+            stopping_value = uin.float_input()
+
+            if stopping_value < 0 or not stopping_value:
+                print("It has to be a non-negative number")
+                sleep(1)
+                clear_console()
+    else:
+        while not stopping_value:
+            print("Provide desired value to be reached:")
+            stopping_value = uin.float_input()
+
+            if not stopping_value:
+                print("It has to be a number")
+                sleep(1)
+                clear_console()
+
+    return stopping_value
+
 def user_interface():
     optimization_method = select_optimization_method()
     objective_function, gradient = select_objective_function()
     coefficients = select_parameters(objective_function)
     starting_point = select_starting_point(objective_function, coefficients)
     stopping_criterion_mode = select_stopping_criterion()
-
-user_interface()
+    stopping_value = select_stopping_value(stopping_criterion_mode)
