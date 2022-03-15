@@ -28,7 +28,7 @@ def gradient_descent(starting_point, objective_function, coefficients, gradient,
 
     return x, current_value
 
-def newtons_method(starting_point, objective_function, coefficients, first_derivative_coefficients, second_derivative_coefficients, derivative_result, stopping_criterion_mode, stopping_criterion_value):
+def newtons_method(starting_point, objective_function, coefficients, derivative_result, stopping_criterion_mode, stopping_criterion_value):
     """
     Returns solution x and value at this point found by
     Newton's method.
@@ -37,8 +37,6 @@ def newtons_method(starting_point, objective_function, coefficients, first_deriv
     starting_point: x_0, point from which algorithm starts to operate
     objective_function: function that is being analysed
     coefficients: objective function coefficients
-    first_derivative_coefficients: first derivative of analysed function
-    second_derivative_coefficients : second derivative of analysed function
     derivative_result: first derivative of analysed function of x over second derivative of analysed function of x
     stopping_criterion_mode: stopping mode given as StoppingMode enum
     stopping_criterion_value: depending on a stopping criterion it might be maximal number
@@ -48,13 +46,11 @@ def newtons_method(starting_point, objective_function, coefficients, first_deriv
     x = starting_point
     stopping_criterion = sc.StoppingCriterion(stopping_criterion_mode, stopping_criterion_value)
     current_value = objective_function(x, coefficients)
-    first_der_coefficients = first_derivative_coefficients(coefficients)
-    second_der_coefficients = second_derivative_coefficients(coefficients)
 
     while not stopping_criterion.stopping_criterion(current_value):
       
-       x = x - derivative_result(x, first_der_coefficients, second_der_coefficients) # x = x - f'(x)/f"(x)
-       current_value = objective_function(x, first_der_coefficients, second_der_coefficients )
+       x = x - derivative_result(x, coefficients) # x = x - f'(x)/f"(x)
+       current_value = objective_function(x, coefficients)
   
     return  x, current_value
 
