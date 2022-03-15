@@ -67,7 +67,16 @@ def select_objective_function():
     return (of.f_x, of.f_x_gradient) if function == 1 else (of.g_x, of.g_x_gradient)
 
 def select_parameters(objective_function):
-    # TODO: function's description
+    """
+    Promps the user to provide parameters for selected
+    objective function.
+
+    Parameters:
+    objective_function: handle to one of the objective functions
+
+    Output:
+    coefficients: dictionary of coefficients for the selected objective functions.
+    """
     clear_console()
 
     if objective_function == of.f_x:
@@ -116,21 +125,39 @@ def select_parameters(objective_function):
         clear_console()
         b = []
         while len(b) != d:
-            print(f"Provide {d} elements of vector b for F(x) = ax^3 + bx^2 + cx + d")
+            print(f"Provide {d} elements of vector b for G(x) = c + b^(T)x + x^(T)Ax")
             b = uin.float_list_input("<separate them with spaces>: ")
 
             if len(b) == 0:
-                print("At least one coefficient is wrong")
+                print("At least one element is wrong")
                 sleep(1)
                 clear_console()
             elif len(b) != d:
-                print("Wrong number of coefficients")
+                print("Wrong number of elements")
                 sleep(1)
                 clear_console()
 
-        #TODO input for matrix A
+        A = []
+        while len(A) != d:
+            row = []
+            while len(row) != d:
+                clear_console()
+                print(f"Provide {d} elements of a row for matrix A for G(x) = c + b^(T)x + x^(T)Ax")
+                row = uin.float_list_input("<separate them with spaces>: ")
+
+                if len(row) == 0:
+                    print("At least one element is wrong")
+                    sleep(1)
+                    clear_console()
+                elif len(row) != d:
+                    print("Wrong number of elements")
+                    sleep(1)
+                    clear_console()
+
+            A.append(row)
 
         coefficients = {
+            'A': np.asarray(A),
             'b': np.asarray([b]).T,
             'c': c
         }
