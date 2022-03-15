@@ -138,28 +138,38 @@ def select_parameters(objective_function):
                 clear_console()
 
         A = []
-        while len(A) != d:
-            row = []
-            while len(row) != d:
+        A_np = np.array([])
+
+        while not uin.is_positive_definite(A_np):
+            while len(A) != d:
+                row = []
+                while len(row) != d:
+                    clear_console()
+                    print(f"Provide {d} elements of a row for matrix A for G(x) = c + b^(T)x + x^(T)Ax")
+                    row = uin.float_list_input("<separate them with spaces>: ")
+
+                    if len(row) == 0:
+                        print("At least one element is wrong")
+                        sleep(1)
+                        clear_console()
+                    elif len(row) != d:
+                        print("Wrong number of elements")
+                        sleep(1)
+                        clear_console()
+
+                A.append(row)
+            A_np = np.asarray(A)
+            if not uin.is_positive_definite(A_np):
+                print("Matrix has to be positive-definite")
+                sleep(1)
                 clear_console()
-                print(f"Provide {d} elements of a row for matrix A for G(x) = c + b^(T)x + x^(T)Ax")
-                row = uin.float_list_input("<separate them with spaces>: ")
-
-                if len(row) == 0:
-                    print("At least one element is wrong")
-                    sleep(1)
-                    clear_console()
-                elif len(row) != d:
-                    print("Wrong number of elements")
-                    sleep(1)
-                    clear_console()
-
-            A.append(row)
+                A = []
 
         coefficients = {
-            'A': np.asarray(A),
+            'A': A_np,
             'b': np.asarray([b]).T,
-            'c': c
+            'c': c,
+            'd': d
         }
 
     return coefficients
