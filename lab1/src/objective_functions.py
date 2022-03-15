@@ -51,7 +51,7 @@ def g_x_gradient(x, coefficients):
 
 def f_x_derivative_result(x, coefficients):
     first_derivative_of_x = 3 * coefficients['a'] * x ** 2 + 2 * coefficients['b'] * x + coefficients['c']
-    second_derivative_of_x = 6 * coefficients['a'] * x + coefficients['b']
+    second_derivative_of_x = 6 * coefficients['a'] * x + 2 * coefficients['b']
 
     return first_derivative_of_x/second_derivative_of_x
 
