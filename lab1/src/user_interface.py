@@ -327,10 +327,15 @@ def select_stopping_value(stopping_criterion_mode):
 
     return stopping_value
 
-def user_interface():
+def normal_mode():
     optimization_method = select_optimization_method()
     objective_function, gradient = select_objective_function(optimization_method)
     coefficients = select_parameters(objective_function)
     starting_point = select_starting_point(objective_function, coefficients)
     stopping_criterion_mode = select_stopping_criterion()
     stopping_value = select_stopping_value(stopping_criterion_mode)
+
+    return optimization_method(starting_point, objective_function, coefficients, gradient, stopping_criterion_mode, stopping_value)
+
+def batch_mode(number_of_iterations):
+    pass

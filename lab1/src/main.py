@@ -1,5 +1,26 @@
+from time import sleep
 
-# usermenu
+import user_interface as ui
+import user_input as uin
+
+def main():
+    ui.clear_console()
+    mode = 0
+    while mode != 1 and mode != 2:
+        print("Select mode:")
+        print("1. Normal mode")
+        print("2. Batch mode")
+        mode = uin.integer_input("Choose mode: ")
+
+        if mode != 1 and mode != 2:
+            print("Wrong option")
+            sleep(1)
+            ui.clear_console()
+    
+    if mode == 1:
+        x, y = ui.normal_mode()
+        ui.clear_console()
+        print(f"The optimal value is {y} and it is value for argument {x}")
 
 #get from user:
 # 1.choose optimization method 
@@ -17,7 +38,8 @@
 
 #checking if A is a positive-definite matrix
 
-# run_optimization (run chosen method n-times) - when batch mode n>=2, normal n=1
+if __name__ == '__main__':
+    main()
 
 #print results
 #normal mode: x*, F(x*), G(x*)
