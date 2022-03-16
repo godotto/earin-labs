@@ -59,5 +59,4 @@ def g_x_derivative_result (x, coefficients):
     first_derivative_of_x = (coefficients['b'] + 2 * coefficients['A'] @ x)
     second_derivative_of_x = 2 * coefficients['A']
 
-    return first_derivative_of_x/second_derivative_of_x
-
+    return np.linalg.inv(second_derivative_of_x) @ first_derivative_of_x
