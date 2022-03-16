@@ -1,4 +1,5 @@
 from enum import Enum
+import time
 
 
 class StoppingMode(Enum):
@@ -36,7 +37,7 @@ class StoppingCriterion:
             self.__max_iteration = max_value
             self.stopping_criterion = self.__max_iteration_mode
         elif mode == StoppingMode.MAX_TIME:
-            self.__timer = 0
+            self.__start = time.perf_counter()
             self.__max_time = max_value
             self.stopping_criterion = self.__max_time_mode
         else:
@@ -60,7 +61,10 @@ class StoppingCriterion:
 
     # TODO: maybe some kind of asynchronous function?
     def __max_time_mode(self, __current_value):
-        pass
+        if (time.perf_counter() - self.__start) < self.__max_time:
+            return False
+        else:
+            return True
 
     def __desired_val_mode(self, current_value):
         """
