@@ -181,7 +181,7 @@ def select_parameters(objective_function):
 
     return coefficients
 
-def select_starting_point(objective_function, coefficients):
+def select_starting_point(objective_function, coefficients, method = 0, random_range = []):
     """
     Prompts the user to provide starting point for the
     selected method of optimization.
@@ -194,7 +194,6 @@ def select_starting_point(objective_function, coefficients):
     x_0: starting point for the selected method, in form of scalar or vector.
     """
     clear_console()
-    method = 0
     while method != 1 and method != 2:
         print("Selection of starting point:")
         print("1. Manual")
@@ -234,7 +233,6 @@ def select_starting_point(objective_function, coefficients):
                     clear_console()
             x_0 = np.asarray([x_0]).T
     else:
-        random_range = []
         while len(random_range) != 2:
             print(f"Select range of numbers for uniform distribution (lower first)")
             random_range = uin.float_list_input("<separate them with spaces>: ")
@@ -338,4 +336,36 @@ def normal_mode():
     return optimization_method(starting_point, objective_function, coefficients, gradient, stopping_criterion_mode, stopping_value)
 
 def batch_mode(number_of_iterations):
-    pass
+    optimization_method = select_optimization_method()
+    objective_function, gradient = select_objective_function(optimization_method)
+    coefficients = select_parameters(objective_function)
+    stopping_criterion_mode = select_stopping_criterion()
+    stopping_value = select_stopping_value(stopping_criterion_mode)
+
+    random_range = []
+    while len(random_range) != 2:
+            print(f"Select range of numbers for uniform distribution (lower first)")
+            random_range = uin.float_list_input("<separate them with spaces>: ")
+
+            if len(random_range) == 0:
+                print("At least one element is wrong")
+                sleep(1)
+                clear_console()
+            elif len(random_range) != 2:
+                print("Wrong number of elements")
+                sleep(1)
+                clear_console()
+            elif random_range[0] >= random_range[1]:
+                print("Lower boundary cannot be higher or equal to the higher boundary")
+                sleep(1)
+                clear_console()
+                random_range = []
+
+    output_values = np.array([])
+
+    for _ in range(number_of_iterations):
+        starting_point = select_starting_point(objective_function, coefficients, 2, random_range)
+        _, output_value = optimization_method(starting_point, objective_function, coefficients, gradient, stopping_criterion_mode, stopping_value)
+        output_values = np.append(output_values, output_value)
+    
+    return np.mean(output_values), np.std(output_values)

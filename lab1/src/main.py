@@ -21,26 +21,20 @@ def main():
         x, y = ui.normal_mode()
         ui.clear_console()
         print(f"The optimal value is {y} and it is value for argument {x}")
+    else:
+        ui.clear_console()
+        number_of_iterations = 0
+        while number_of_iterations < 1 or not number_of_iterations:
+            print("Provide number of iterations:")
+            number_of_iterations = uin.integer_input()
 
-#get from user:
-# 1.choose optimization method 
-# 2.choose function to be optimized (F(x)/G(x))
-# 3.function parameters :
-#F(x): a,b,c,d - scalar
-#G(x): c - scalar, b- d-dimensional vector, d-dimensions, A - positive-definite matrix
-# 4. define starting point:
-# 4.1. initial vector / scalar number from user
-# 4.2. range of numbers
-# 5.stopping conditions
-# 5.1. max number of iterations
-# 5.2. desired value F(x) or G(x) (so the process is finished when F(x)>=value_to_reach/ G(x)>=value_to_reach )
-# 5.3. maximum computation time
+            if number_of_iterations < 1 or not number_of_iterations:
+                print("It has to be a positive integer")
+                sleep(1)
+                ui.clear_console()
 
-#checking if A is a positive-definite matrix
+        mean, standard_deviation = ui.batch_mode(number_of_iterations)
+        print(f"Obtained mean value is {mean} having standard deviation of {standard_deviation}")
 
 if __name__ == '__main__':
     main()
-
-#print results
-#normal mode: x*, F(x*), G(x*)
-#batch mode: mean values of x*, F(x*), G(x*), standard deviation
