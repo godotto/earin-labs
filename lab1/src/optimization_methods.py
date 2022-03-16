@@ -1,7 +1,7 @@
 import stopping_criterion as sc
 import objective_functions as of
 
-def gradient_descent(starting_point, objective_function, coefficients, gradient, step_size, stopping_criterion_mode, stopping_criterion_value):
+def gradient_descent(starting_point, objective_function, coefficients, gradient, stopping_criterion_mode, stopping_criterion_value):
     """
     Returns solution x and value at this point found by
     gradient descent method.
@@ -11,7 +11,6 @@ def gradient_descent(starting_point, objective_function, coefficients, gradient,
     objective_function: function that is being analysed
     coefficients: objective function coefficients
     gradient: gradient of analyzed function
-    step_size: value by which antigradient is being scaled when new point is calculated
     stopping_criterion_mode: stopping mode given as StoppingMode enum
     stopping_criterion_value: depending on a stopping criterion it might be maximal number
                               of iterations, maximal time spent on calculations or desired
@@ -19,6 +18,7 @@ def gradient_descent(starting_point, objective_function, coefficients, gradient,
     """
 
     x = starting_point
+    step_size = 0.1
     stopping_criterion = sc.StoppingCriterion(stopping_criterion_mode, stopping_criterion_value)
     current_value = objective_function(x, coefficients)
 
@@ -41,7 +41,8 @@ def newtons_method(starting_point, objective_function, coefficients, derivative_
     stopping_criterion_mode: stopping mode given as StoppingMode enum
     stopping_criterion_value: depending on a stopping criterion it might be maximal number
                               of iterations, maximal time spent on calculations or desired
-                              value that has to be achieved or exceeded.
+                              value that has to be achieved or exceeded
+    step_size: only for the sake of compatibility.
     """
     x = starting_point
     stopping_criterion = sc.StoppingCriterion(stopping_criterion_mode, stopping_criterion_value)

@@ -45,9 +45,12 @@ def select_optimization_method():
 
     return om.gradient_descent if method == 1 else om.newtons_method
 
-def select_objective_function():
+def select_objective_function(optimization_method):
     """
     Prompts the user to choose function for optimization.
+
+    Parameters:
+    optimization_method: selected function with optimization method
 
     Output:
     functions from objective_functions module.
@@ -65,7 +68,10 @@ def select_objective_function():
             sleep(1)
             clear_console()
 
-    return (of.f_x, of.f_x_gradient) if function == 1 else (of.g_x, of.g_x_gradient)
+    if optimization_method == om.gradient_descent:
+        return (of.f_x, of.f_x_gradient) if function == 1 else (of.g_x, of.g_x_gradient)
+    else:
+        return (of.f_x, of.f_x_derivative_result) if function == 1 else (of.g_x, of.g_x_derivative_result)
 
 def select_parameters(objective_function):
     """
@@ -203,12 +209,12 @@ def select_starting_point(objective_function, coefficients):
     if method == 1:
         if objective_function == of.f_x:
             clear_console()
-            x_0 = 0
-            while not x_0:
+            x_0 = False
+            while not x_0 and type(x_0) == bool:
                 print("Provide a scalar starting point:")
                 x_0 = uin.float_input()
 
-                if not x_0:
+                if not x_0 and type(x_0) == bool:
                     print("Coefficient has to be a number")
                     sleep(1)
                     clear_console()
@@ -226,11 +232,12 @@ def select_starting_point(objective_function, coefficients):
                     print("Wrong number of elements")
                     sleep(1)
                     clear_console()
+            x_0 = np.asarray([x_0]).T
     else:
         random_range = []
         while len(random_range) != 2:
             print(f"Select range of numbers for uniform distribution (lower first)")
-            random_range = uin.int_list_input("<separate them with spaces>: ")
+            random_range = uin.float_list_input("<separate them with spaces>: ")
 
             if len(random_range) == 0:
                 print("At least one element is wrong")
@@ -322,7 +329,7 @@ def select_stopping_value(stopping_criterion_mode):
 
 def user_interface():
     optimization_method = select_optimization_method()
-    objective_function, gradient = select_objective_function()
+    objective_function, gradient = select_objective_function(optimization_method)
     coefficients = select_parameters(objective_function)
     starting_point = select_starting_point(objective_function, coefficients)
     stopping_criterion_mode = select_stopping_criterion()
