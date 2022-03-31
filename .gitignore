@@ -10,3 +10,6 @@ pyvenv.cfg
 
 # Python's cache
 __pycache__/
+
+# ZIP archives
+*.zip
