@@ -6,7 +6,7 @@ def create_population(size:int, n:int, d:int):
 
     for i in range(size):
         for j in range(n):
-            population[i][j] = random.randrange(-2 ** d, 2 ** d - 1)
+            population[i][j] = random.randint(-2 ** d, 2 ** d - 1)
 
     return population
 
@@ -53,3 +53,27 @@ def roulette_wheel_selection(population, coefficients, number_for_reproduction):
 
     return [population[i] for i in selected_indices]
         
+def fenotype(genome, d:int):
+    binary_string = ''.join(str(bit) for bit in genome)
+    intermediate_form = int(binary_string, 2)
+    return (-1) * (2 ** (d + 1) - intermediate_form)
+
+def crossover(first_parent, second_parent, probability, d, n):
+    if random.random() > probability:
+        return (first_parent, second_parent)
+    
+    first_offspring = np.ndarray(shape=(n, 1))
+    second_offspring = np.ndarray(shape=(n, 1))
+    crossover_point = random.randint(1, d)
+
+    for i in range(n):
+        first_parent_genome = genome(first_parent[i][0], d)
+        second_parent_genome = genome(second_parent[i][0], d)
+
+        first_offspring_genome = np.concatenate((first_parent_genome[:crossover_point], second_parent_genome[crossover_point:]), axis=None)
+        second_offspring_genome = np.concatenate((second_parent_genome[:crossover_point], first_parent_genome[crossover_point:]), axis=None)
+
+        first_offspring[i] = fenotype(first_offspring_genome, d)
+        second_offspring[i] = fenotype(second_offspring_genome, d)
+
+    return (first_offspring, second_offspring)
