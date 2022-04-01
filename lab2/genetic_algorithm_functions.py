@@ -98,10 +98,10 @@ def replace(population,offspring_list, number_to_replace):
     population = np.append(population,offspring_list,axis=0)  
     return population 
 
-def genetic_algorithm(population, coefficients,n, d, crossover_probability,mutation_probability, number_of_ind_to_replace):
+def genetic_algorithm(population, coefficients, n, d, crossover_probability,mutation_probability, number_of_ind_to_replace):
 
     selected_for_reproduction = roulette_wheel_selection(population,coefficients,number_of_ind_to_replace)
-    offspring_list =[]
+    offspring_list = np.ndarray((number_of_ind_to_replace, n, 1), dtype=int)
     i=0
     while i < len(selected_for_reproduction) - 1:
         (offspring1, offspring2) = crossover(selected_for_reproduction[i], selected_for_reproduction[i+1],crossover_probability,d,n)
@@ -109,8 +109,9 @@ def genetic_algorithm(population, coefficients,n, d, crossover_probability,mutat
         #mutate new individuals
         offspring1 = mutation(offspring1,mutation_probability,d)
         offspring2 = mutation(offspring2,mutation_probability,d)
-        offspring_list.append(offspring1)
-        offspring_list.append(offspring2)
+        
+        offspring_list[i] = offspring1
+        offspring_list[i + 1] = offspring2
         i+=1
 
     new_population = replace(population,offspring_list, number_of_ind_to_replace)
@@ -119,6 +120,5 @@ def genetic_algorithm(population, coefficients,n, d, crossover_probability,mutat
 
 def get_algorithm_results(population, coefficients):
     results = []
-    for i in population:
-        results.append(population[i],(fitness_function(population[i],coefficients)))
-    return result    
+    for specimen in population:
+        results.append((specimen,(fitness_function(specimen,coefficients))))
