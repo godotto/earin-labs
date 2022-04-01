@@ -67,8 +67,8 @@ def crossover(first_parent, second_parent, probability, d, n):
     if random.random() > probability:
         return (first_parent, second_parent)
     
-    first_offspring = np.ndarray(shape=(n, 1))
-    second_offspring = np.ndarray(shape=(n, 1))
+    first_offspring = np.ndarray(shape=(n, 1), dtype=int)
+    second_offspring = np.ndarray(shape=(n, 1), dtype=int)
     crossover_point = random.randint(1, d)
 
     for i in range(n):
@@ -111,7 +111,7 @@ def genetic_algorithm(population, coefficients,n, d, crossover_probability,mutat
         offspring2 = mutation(offspring2,mutation_probability,d)
         offspring_list.append(offspring1)
         offspring_list.append(offspring2)
-    i+=1
+        i+=1
 
     new_population = replace(population,offspring_list, number_of_ind_to_replace)
 
@@ -122,24 +122,3 @@ def get_algorithm_results(population, coefficients):
     for i in population:
         results.append(population[i],(fitness_function(population[i],coefficients)))
     return result    
-
-
-# num_to_replace = 2
-# A = np.asarray([[2,1],[1,2]])
-# b= [1,2]
-# coefficients = {'A':A,'b':np.asarray([b]).T, 'c':2}
-
-# offspring_list =[]
-# population = create_population(4,2,2)
-# selected_for_reproduction = roulette_wheel_selection(population,coefficients,num_to_replace)
-
-# i=0
-# while i < len(selected_for_reproduction) - 1:
-#    (offspring1, offspring2) = crossover(selected_for_reproduction[i], selected_for_reproduction[i+1],0.7,2,2)
-#    offspring_list.append(offspring1)
-#    offspring_list.append(offspring2)
-#    i+=1
-
-# new_population = replace(population,offspring_list, num_to_replace)
-
-# print(new_population)
