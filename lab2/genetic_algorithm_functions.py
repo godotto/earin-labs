@@ -122,3 +122,4 @@ def get_algorithm_results(population, coefficients):
     results = []
     for specimen in population:
         results.append((specimen,(fitness_function(specimen,coefficients))))
+    return results
