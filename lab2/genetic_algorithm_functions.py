@@ -1,4 +1,5 @@
 import random
+from unittest import result
 import numpy as np
 
 def create_population(size:int, n:int, d:int):
@@ -7,7 +8,7 @@ def create_population(size:int, n:int, d:int):
     for i in range(size):
         for j in range(n):
             population[i][j] = random.randint(-2 ** d, 2 ** d - 1)
-
+ 
     return population
 
 def to_genome(fenotype:int, d:int):
@@ -90,3 +91,55 @@ def mutation(individual, probability,d):
                 genome[j] = int(not(gene))
         individual[i] = to_fenotype(genome,d)    
     return individual
+
+def replace(population,offspring_list, number_to_replace):
+    for i in range(number_to_replace):
+        population = np.delete(population,0,axis=0)
+    population = np.append(population,offspring_list,axis=0)  
+    return population 
+
+def genetic_algorithm(population, coefficients,n, d, crossover_probability,mutation_probability, number_of_ind_to_replace):
+
+    selected_for_reproduction = roulette_wheel_selection(population,coefficients,number_of_ind_to_replace)
+    offspring_list =[]
+    i=0
+    while i < len(selected_for_reproduction) - 1:
+        (offspring1, offspring2) = crossover(selected_for_reproduction[i], selected_for_reproduction[i+1],crossover_probability,d,n)
+
+        #mutate new individuals
+        offspring1 = mutation(offspring1,mutation_probability,d)
+        offspring2 = mutation(offspring2,mutation_probability,d)
+        offspring_list.append(offspring1)
+        offspring_list.append(offspring2)
+    i+=1
+
+    new_population = replace(population,offspring_list, number_of_ind_to_replace)
+
+    return new_population
+
+def get_algorithm_results(population, coefficients):
+    results = []
+    for i in population:
+        results.append(population[i],(fitness_function(population[i],coefficients)))
+    return result    
+
+
+# num_to_replace = 2
+# A = np.asarray([[2,1],[1,2]])
+# b= [1,2]
+# coefficients = {'A':A,'b':np.asarray([b]).T, 'c':2}
+
+# offspring_list =[]
+# population = create_population(4,2,2)
+# selected_for_reproduction = roulette_wheel_selection(population,coefficients,num_to_replace)
+
+# i=0
+# while i < len(selected_for_reproduction) - 1:
+#    (offspring1, offspring2) = crossover(selected_for_reproduction[i], selected_for_reproduction[i+1],0.7,2,2)
+#    offspring_list.append(offspring1)
+#    offspring_list.append(offspring2)
+#    i+=1
+
+# new_population = replace(population,offspring_list, num_to_replace)
+
+# print(new_population)

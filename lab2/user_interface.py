@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import user_input as uin
+import genetic_algorithm_functions as gaf
 
 
 def clear_console():
@@ -100,10 +101,9 @@ def select_parameters():
         'A': A_np,
         'b': np.asarray([b]).T,
         'c': c,
-        'n': n
     }
 
-    return coefficients
+    return (coefficients,n)
 
 def select_range():
 
@@ -181,20 +181,21 @@ def select_number_of_ind_to_replace():
     clear_console()
 
     number_of_ind_to_replace = 0
-    while number_of_ind_to_replace >= 1 or not number_of_ind_to_replace:
+    while number_of_ind_to_replace %2 !=0 or number_of_ind_to_replace<2 or not number_of_ind_to_replace:
         print("Provide number of individuals to replace every iteration:")
-        crossover_probability = uin.float_input()
+        number_of_ind_to_replace = uin.integer_input()
 
-        if number_of_ind_to_replace >= 1 or not number_of_ind_to_replace:
-            print("number of individuals to replace has to be greater than 0. ")
+        if number_of_ind_to_replace %2 !=0 or number_of_ind_to_replace<2 or not number_of_ind_to_replace:
+            print("number of individuals to replace has to be even and greater or equal 2. ")
             sleep(1)
             clear_console()
     return number_of_ind_to_replace
 
 
 def user_interface():
-    coefficients = select_parameters()
-    print("Chosen function coefficients are \n A:", coefficients['A'], "\n", "b:", coefficients['b'], "\n", "c:", coefficients['c'], "\n" ,"(dimensions) n:", coefficients['n'] )
+    # collect all input values from user
+    (coefficients,n) = select_parameters()
+    print("Chosen function coefficients are \n A:", coefficients['A'], "\n", "b:", coefficients['b'], "\n", "c:", coefficients['c'], "\n" ,"(dimensions) n:", n )
     d = select_range()
     print(f"Chosen d for x range is: {d}")
     population_size = select_population_size()
@@ -205,3 +206,14 @@ def user_interface():
     print(f"Chosen iteration number: {iteration_number}")
     number_of_ind_to_replace = select_number_of_ind_to_replace()
     print(f"Chosen number of individuals to replace: {number_of_ind_to_replace} \n")
+
+    # call here whole algorithm and results method
+    population = gaf.create_population(population_size,n,d)
+    for i in range(iteration_number):
+        new_population = gaf.genetic_algorithm(population, coefficients,n, d, crossover_probability,mutation_probability, number_of_ind_to_replace)
+        print("previous population results: \n")
+        print(gaf.get_algorithm_results(population,coefficients))
+        print("\n new population results:")
+        print(gaf.get_algorithm_results(new_population,coefficients))
+        population = new_population 
+        
