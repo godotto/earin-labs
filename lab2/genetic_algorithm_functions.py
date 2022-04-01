@@ -56,6 +56,10 @@ def roulette_wheel_selection(population, coefficients, number_for_reproduction):
 def fenotype(genome, d:int):
     binary_string = ''.join(str(bit) for bit in genome)
     intermediate_form = int(binary_string, 2)
+
+    if binary_string[0] == '0':
+        return intermediate_form
+    else:
     return (-1) * (2 ** (d + 1) - intermediate_form)
 
 def crossover(first_parent, second_parent, probability, d, n):
