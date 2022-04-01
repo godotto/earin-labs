@@ -126,7 +126,7 @@ def select_population_size():
     clear_console()
 
     population_size = 0
-    while population_size < 1 or not population_size:
+    while population_size <= 1 or not population_size:
         print("Provide the population size:")
         population_size = uin.integer_input()
 
@@ -145,7 +145,7 @@ def select_iteration_number():
         print("Provide number of algorithm iterations:")
         number_of_iterations = uin.integer_input()
 
-        if number_of_iterations <= 0 or not number_of_iterations:
+        if number_of_iterations < 1 or not number_of_iterations:
             print("Number of iterations has to be an integer greater than 0.")
             sleep(1)
             clear_console()
@@ -176,10 +176,20 @@ def select_probabilities():
             clear_console()        
     return crossover_probability, mutation_probability
 
-    pass
+def select_number_of_ind_to_replace():
+    
+    clear_console()
 
+    number_of_ind_to_replace = 0
+    while number_of_ind_to_replace >= 1 or not number_of_ind_to_replace:
+        print("Provide number of individuals to replace every iteration:")
+        crossover_probability = uin.float_input()
 
-
+        if number_of_ind_to_replace >= 1 or not number_of_ind_to_replace:
+            print("number of individuals to replace has to be greater than 0. ")
+            sleep(1)
+            clear_console()
+    return number_of_ind_to_replace
 
 
 def user_interface():
@@ -193,3 +203,5 @@ def user_interface():
     print(f"Chosen crossover probability: {crossover_probability} \n Chosen mutation probability: {mutation_probability} ")
     iteration_number = select_iteration_number()
     print(f"Chosen iteration number: {iteration_number}")
+    number_of_ind_to_replace = select_number_of_ind_to_replace()
+    print(f"Chosen number of individuals to replace: {number_of_ind_to_replace} \n")
