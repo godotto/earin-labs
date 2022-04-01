@@ -10,7 +10,7 @@ def create_population(size:int, n:int, d:int):
 
     return population
 
-def genome(fenotype:int, d:int):
+def to_genome(fenotype:int, d:int):
     binary_string = np.binary_repr(fenotype, d + 1)
     return np.array(list(binary_string), dtype=int)
 
@@ -52,8 +52,8 @@ def roulette_wheel_selection(population, coefficients, number_for_reproduction):
                 break
 
     return [population[i] for i in selected_indices]
-
-def fenotype(genome, d:int):
+        
+def to_fenotype(genome, d:int):
     binary_string = ''.join(str(bit) for bit in genome)
     intermediate_form = int(binary_string, 2)
 
@@ -71,13 +71,22 @@ def crossover(first_parent, second_parent, probability, d, n):
     crossover_point = random.randint(1, d)
 
     for i in range(n):
-        first_parent_genome = genome(first_parent[i][0], d)
-        second_parent_genome = genome(second_parent[i][0], d)
+        first_parent_genome = to_genome(first_parent[i][0], d)
+        second_parent_genome = to_genome(second_parent[i][0], d)
 
         first_offspring_genome = np.concatenate((first_parent_genome[:crossover_point], second_parent_genome[crossover_point:]), axis=None)
         second_offspring_genome = np.concatenate((second_parent_genome[:crossover_point], first_parent_genome[crossover_point:]), axis=None)
 
-        first_offspring[i] = fenotype(first_offspring_genome, d)
-        second_offspring[i] = fenotype(second_offspring_genome, d)
+        first_offspring[i] = to_fenotype(first_offspring_genome, d)
+        second_offspring[i] = to_fenotype(second_offspring_genome, d)
 
     return (first_offspring, second_offspring)
+
+def mutation(individual, probability,d):
+    for i,fenotype in enumerate(individual):
+        genome = to_genome(fenotype[0],d)
+        for j,gene in enumerate(genome):
+            if random.random() <= probability:
+                genome[j] = int(not(gene))
+        individual[i] = to_fenotype(genome,d)    
+    return individual
