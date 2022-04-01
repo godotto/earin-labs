@@ -191,33 +191,38 @@ def select_number_of_ind_to_replace():
             clear_console()
     return number_of_ind_to_replace
 
-def print_results(population_results):
-    for result in population_results:
-        print(f"x, f(x): {result} \n")        
+   
 
 
 def user_interface():
     # collect all input values from user
     (coefficients,n) = select_parameters()
-    print("Chosen function coefficients are \n A:", coefficients['A'], "\n", "b:", coefficients['b'], "\n", "c:", coefficients['c'], "\n" ,"(dimensions) n:", n )
     d = select_range()
-    print(f"Chosen d for x range is: {d}")
     population_size = select_population_size()
-    print(f"Chosen population size: {population_size}")
     (crossover_probability, mutation_probability) = select_probabilities() 
-    print(f"Chosen crossover probability: {crossover_probability} \n Chosen mutation probability: {mutation_probability} ")
     iteration_number = select_iteration_number()
-    print(f"Chosen iteration number: {iteration_number}")
     number_of_ind_to_replace = select_number_of_ind_to_replace()
-    print(f"Chosen number of individuals to replace: {number_of_ind_to_replace} \n")    
+    clear_console()
 
-    # call here whole algorithm and results method
+    #print all used parameters
+    print("Parameters used in this run were:")
+    print(f"function coefficients: \n A: {coefficients['A']} \n b: {coefficients['b']} \n c: {coefficients['c']} \n")
+    print(f"(dimensions) n: {n} \n")  
+    print(f"(exponent) d: {d} \n")  
+    print(f"population size: {population_size}")
+    print(f"crossover probability: {crossover_probability} \nmutation probability: {mutation_probability} \n")
+    print(f"number of individuals to replace: {number_of_ind_to_replace} \n") 
+    print(f"number of iterations: {iteration_number} \n")
+    
+    #call here whole algorithm and results method
     population = gaf.create_population(population_size,n,d)
     for i in range(iteration_number):
+        print(f"ITERATION : {i+1} \n")
         new_population = gaf.genetic_algorithm(population, coefficients,n, d, crossover_probability,mutation_probability, number_of_ind_to_replace)
         print("previous population results: \n")
-        print_results(gaf.get_algorithm_results(population,coefficients))
+        gaf.get_algorithm_results(population,coefficients)
         print("\n new population results:")
-        print_results(gaf.get_algorithm_results(new_population,coefficients))
+        gaf.get_algorithm_results(new_population,coefficients)
         population = new_population 
-        
+
+ 

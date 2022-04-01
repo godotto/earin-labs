@@ -120,6 +120,12 @@ def genetic_algorithm(population, coefficients, n, d, crossover_probability,muta
 
 def get_algorithm_results(population, coefficients):
     results = []
-    for specimen in population:
-        results.append((specimen,(fitness_function(specimen,coefficients))))
+    for i,specimen in enumerate(population):
+        result = (specimen,(fitness_function(specimen,coefficients)))
+        print(f"{i+1}. x, f(x): {result} \n")  
+        results.append(result)
     return results
+
+def print_results(population_results):
+    for result in population_results:
+        print(f"x, f(x): {result} \n")         
