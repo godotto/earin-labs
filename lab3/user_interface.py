@@ -58,6 +58,8 @@ def get_user_move(board):
        
     return move   
 
+     
+
 def print_board(board):
     print("\n")
     print("\t  CURRENT BOARD \t")
