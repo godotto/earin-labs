@@ -41,15 +41,15 @@ def get_players():
 def get_user_move(board):
 
     move = 0
-    while (move < 1 or move > 9) or not move:
-        print("Please pick a field from 1 to 9")
+    while (move < 0 or move > 8) or not move:
+        print("Please pick a field from 0 to 8")
         move = uin.integer_input()
 
-        if (move < 1 or move > 9) or not move:
-            print("You have to pick a field between 1 and 9")
+        if (move < 0 or move > 8) or not move:
+            print("You have to pick a field between 0 and 8")
             sleep(1)
             clear_console()
-        if board[move-1] != ' ':
+        if board[move] != ' ':
             move = 0
             print("Field is already occupied. Try another one.")
             print_board(board)
