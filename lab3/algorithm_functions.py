@@ -2,29 +2,74 @@
 
 
 # minimax with alpha-beta pruning
-def mini_max(board, depth, alfa, beta, player,  is_max):
+from cmath import inf
+
+
+def mini_max(board, alpha, beta, player, is_maximizing):
+
+    #TODO: rewrite this start part so that it returns a pair - score and move
     # if state  == terminal state 
-   if is_victory(board,player) and is_max == True:
+    if is_victory(board,player) and is_maximizing == True:
        return 1
-   elif is_victory(board, player) and is_max == False:
+    elif is_victory(board, player) and is_maximizing == False:
        return -1
-   elif is_draw(board, player):
+    elif is_draw(board, player):
        return 0
 
-   if depth == 0:
-       # evaluate and return heuristic 
-    return heuristic(board, player, is_max)   
-
     #recursive action with alpha-beta
+    if(is_maximizing):
+        best_move = -1
+        best_score = -inf
+        for i in board.size:
+            if board[i]==' ':
+                # set current field to ai player
+                board[i]=player
+                # calculate score
+                curr_score = mini_max(board, alpha,beta, not is_maximizing)
+                # restore board value
+                board[i]=' '
+                move = i
+                if curr_score > best_score:
+                    best_score = curr_score
+                    best_move = move
+                alpha = max(best_score,alpha)
+                if alpha >= beta:
+                    break
+
+        return (best_move, best_score)
+
+    else:
+        if player=='o': 
+            other_player='x' 
+        else: 
+            other_player='o'
+
+        best_move = -1
+        best_score = -inf
+        for i in board.size:
+            if board[i]==' ':
+                # set current field to ai player
+                board[i]=other_player
+                # calculate score
+                curr_score = mini_max(board, alpha,beta, not is_maximizing)
+                # restore board value
+                board[i]=' '
+                move = i
+                if curr_score < best_score:
+                    best_score = curr_score
+                    best_move = move
+                beta = max(best_score,alpha)
+                if alpha >= beta:
+                    break
+
+    return (best_move, best_score)
 
 
-
-   pass
-
-
-
-def is_draw(board, player):
-    pass
+def is_draw(board):
+    for i in board.size:
+        if board[i]!=' ':
+            return False
+    return True        
 
 def is_victory(board, player):
     terminal_states  = [
@@ -50,8 +95,6 @@ def is_victory(board, player):
 
     return False   
 
-def heuristic(board, player, is_max):
-    pass
 
 def are_equal(arr1, arr2):
     if arr1.size != arr2.size:
