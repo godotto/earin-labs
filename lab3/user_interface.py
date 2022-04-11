@@ -4,7 +4,6 @@ import os
 import numpy as np
 
 import user_input as uin
-import algorithm_functions as af
 import minimax
 
 def clear_console():
@@ -42,22 +41,22 @@ def get_players():
  
     clear_console()
 
-    user_choice = ''
-    while (user_choice !='o' and user_choice !='x') or not user_choice:
+    user_player = ''
+    while (user_player !='o' and user_player !='x') or not user_player:
         print("Pick which do you want to play with: x or o")
-        user_choice = uin.char_input()
+        user_player = uin.char_input()
 
-        if  (user_choice !='o' and user_choice !='x') or not user_choice:
+        if  (user_player !='o' and user_player !='x') or not user_player:
             print("You have to type either 'x' or 'o'")
             sleep(1)
             clear_console()
     algorithm_player = ''
-    if user_choice=='o': 
+    if user_player=='o': 
        algorithm_player = 'x'
     else:
         algorithm_player = 'o'     
         
-    return user_choice, algorithm_player
+    return user_player, algorithm_player
 
 def get_user_move(board):
 
@@ -79,7 +78,40 @@ def get_user_move(board):
        
     return move   
 
-     
+def get_game_mode():
+    clear_console()
+
+    game_mode = ''
+    while (game_mode !='m' and game_mode !='a') or not game_mode:
+        print("Pick game mode: for user vs bot type 'm' (manual), for bot vs bot type 'a' (automatic)")
+        game_mode = uin.char_input()
+
+        if  (game_mode !='m' and game_mode !='a') or not game_mode:
+            print("You have to type either 'm' or 'a'")
+            sleep(1)
+            clear_console()
+   
+    return game_mode
+
+
+def is_x_bot_first():
+    clear_console()
+
+    user_choice = ''
+    while (user_choice !='y' and user_choice !='n') or not user_choice:
+        print("Pick if x bot starts first: 'y' if yes or 'n' if no")
+        user_choice = uin.char_input()
+
+        if  (user_choice !='y' and user_choice !='n') or not user_choice:
+            print("You have to type either 'y' or 'n'")
+            sleep(1)
+            clear_console()
+   
+    if user_choice=='y': 
+       return True
+    else:
+        return False    
+
 
 def print_board(board):
     print("\n")
@@ -110,13 +142,12 @@ def init_game():
     print_board(board)
     return board, user_choice, algorithm_player 
 
-def play_tic_tac_toe():
-    
-    #create board, pick x's and o's for players
-    board, user_choice, algorithm_player = init_game()
+
+def user_vs_bot():
+
+    board, user_player, algorithm_player = init_game()
 
     is_maximizing = True if algorithm_player == 'x' else False 
-
     is_ai_turn = not is_user_first
     
     # loop for moves (while no victory from either user or algorithm)
@@ -124,10 +155,42 @@ def play_tic_tac_toe():
         if is_ai_turn:
             board = update_board(minimax.minimax(board, np.NINF, np.inf, is_maximizing)[1]+1, algorithm_player, board)
         else:
-            board = update_board(get_user_move(board), user_choice, board)
+            board = update_board(get_user_move(board), user_player, board)
             
         print_board(board)
         is_ai_turn = not is_ai_turn
 
+    return minimax.heuristic_function(board)    
 
-play_tic_tac_toe()
+
+def bot_vs_bot():
+    board = np.ndarray(shape=(3, 3), dtype="<U1")
+    board[:] = ' '
+
+    is_x_turn = True if is_x_bot_first() else False
+    
+    # loop for moves (while no victory from either user or algorithm)
+    while (minimax.heuristic_function(board) is None):
+        if is_x_turn:
+            board = update_board(minimax.minimax(board, np.NINF, np.inf, True)[1]+1, 'x', board)
+        else:
+            board = update_board(minimax.minimax(board, np.NINF, np.inf, False)[1]+1, 'o', board)
+            
+        print_board(board)
+        sleep(2)
+        is_x_turn = not is_x_turn
+
+    return minimax.heuristic_function(board) 
+
+def play_noughts_and_crosses():
+
+    game_mode = get_game_mode()
+    game_result = user_vs_bot() if game_mode == 'm' else bot_vs_bot()
+    
+    if game_result==1:
+        print("Crosses win!")
+    elif game_result==-1:
+        print("Noughts win!") 
+    else:
+        print("It's a draw!")
+
