@@ -31,7 +31,7 @@ def is_user_first():
             print("You have to type either 'y' or 'n'")
             sleep(1)
             clear_console()
-   
+
     if user_choice=='y': 
        return True
     else:
@@ -55,7 +55,7 @@ def get_players():
        algorithm_player = 'x'
     else:
         algorithm_player = 'o'     
-        
+
     return user_player, algorithm_player
 
 def get_user_move(board):
@@ -69,13 +69,15 @@ def get_user_move(board):
             print("You have to pick a field between 1 and 9")
             sleep(1)
             clear_console()
+            print_board(board)
         if board.flat[move-1] != ' ':
             move = 0
             print("Field is already occupied. Try another one.")
             print_board(board)
             sleep(3)
             clear_console()
-       
+            print_board(board)
+
     return move   
 
 def get_game_mode():
@@ -86,11 +88,11 @@ def get_game_mode():
         print("Pick game mode: for user vs bot type 'm' (manual), for bot vs bot type 'a' (automatic)")
         game_mode = uin.char_input()
 
-        if  (game_mode !='m' and game_mode !='a') or not game_mode:
+        if (game_mode !='m' and game_mode !='a') or not game_mode:
             print("You have to type either 'm' or 'a'")
             sleep(1)
             clear_console()
-   
+
     return game_mode
 
 
@@ -106,7 +108,7 @@ def is_x_bot_first():
             print("You have to type either 'y' or 'n'")
             sleep(1)
             clear_console()
-   
+
     if user_choice=='y': 
        return True
     else:
@@ -148,15 +150,15 @@ def user_vs_bot():
     board, user_player, algorithm_player = init_game()
 
     is_maximizing = True if algorithm_player == 'x' else False 
-    is_ai_turn = not is_user_first
-    
+    is_ai_turn = not is_user_first()
+
     # loop for moves (while no victory from either user or algorithm)
     while (minimax.heuristic_function(board) is None):
         if is_ai_turn:
             board = update_board(minimax.minimax(board, np.NINF, np.inf, is_maximizing)[1]+1, algorithm_player, board)
         else:
             board = update_board(get_user_move(board), user_player, board)
-            
+
         print_board(board)
         is_ai_turn = not is_ai_turn
 
@@ -168,14 +170,14 @@ def bot_vs_bot():
     board[:] = ' '
 
     is_x_turn = True if is_x_bot_first() else False
-    
+
     # loop for moves (while no victory from either user or algorithm)
     while (minimax.heuristic_function(board) is None):
         if is_x_turn:
             board = update_board(minimax.minimax(board, np.NINF, np.inf, True)[1]+1, 'x', board)
         else:
             board = update_board(minimax.minimax(board, np.NINF, np.inf, False)[1]+1, 'o', board)
-            
+
         print_board(board)
         sleep(2)
         is_x_turn = not is_x_turn
@@ -186,11 +188,10 @@ def play_noughts_and_crosses():
 
     game_mode = get_game_mode()
     game_result = user_vs_bot() if game_mode == 'm' else bot_vs_bot()
-    
+
     if game_result==1:
         print("Crosses win!")
     elif game_result==-1:
         print("Noughts win!") 
     else:
         print("It's a draw!")
-
