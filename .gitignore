@@ -7,6 +7,11 @@ lib64
 bin/
 include/
 pyvenv.cfg
+share/
+Include/
+etc/
+Lib/
+Scripts/
 
 # Python's cache
 __pycache__/
