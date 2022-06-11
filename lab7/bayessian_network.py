@@ -1,17 +1,20 @@
 from random import choice
-
+import numpy as np
 
 class BayessianNetwork:
     def __init__(self):
-        self.__nodes = {
-            "test": {"t": 0.95, "f": 0.05},
-            "cancer": {"tt": 0.9, "tf": 0.2, "ft": 0.1, "ff": 0.8},
+        self.nodes = {
+            "cancer": {True: 0.05, False: 0.95},
+            "test": {
+                True: {True: 0.9, False: 0.1},
+                False: {True: 0.2, False: 0.8}
+            }
         }
 
     def mcmc(self, evidence: dict[str, bool], query: list[str], steps: int):
 
         variables = evidence
-        unobserved_variables_names = [node for node in self.__nodes if node not in evidence]
+        unobserved_variables_names = [node for node in self.nodes if node not in evidence]
 
         # uniformly select random values of unobserved variables
         for variable_name in unobserved_variables_names:
@@ -24,15 +27,37 @@ class BayessianNetwork:
 
         # random walking
         for _ in range(steps):
-            # draw non-observed variable
-            selected_variable = choice(unobserved_variables_names)
-            # TODO: Random(P(X_i|MarkovBlanket(X_i)))
+            if len(unobserved_variables_names) != 0:
+                # draw non-observed variable
+                selected_variable = choice(unobserved_variables_names)
+
+                variables[selected_variable] = self.__draw_sample(variables, selected_variable)
 
             # update counters
             for variable_name in query:
                 counters[variable_name][variables[variable_name]] += 1
 
         return self.__normalize_counters(counters)
+
+    def __draw_sample(self, variables: dict[str, bool], selected_variable: str):
+        probabilities = []
+        
+        if selected_variable == "cancer":
+            probability = self.nodes["cancer"][False]
+            probability *= self.nodes["test"][False][variables["test"]]
+            probabilities.append(probability)
+
+            probability = self.nodes["cancer"][True]
+            probability *= self.nodes["test"][True][variables["test"]]
+            probabilities.append(probability)
+
+            alpha = 1 / sum(probabilities)
+            probabilities = [alpha * p for p in probabilities]
+        else:
+            probabilities.append(self.nodes["test"][variables["cancer"]][False])
+            probabilities.append(1 - probabilities[0])
+
+        return np.random.choice([False, True], p=probabilities)
 
     def __normalize_counters(self, counters: dict[str, dict[bool, int]]) -> dict[str, dict[bool, float]]:
         normalized_counters = {}

@@ -1,14 +1,5 @@
 import re
-
-# probability of cancer
-P_CANCER_T = 0.05
-P_CANCER_F = 0.95
-
-# Probabilities of TF, TT, FT, FF
-P_CANCER_T_TEST_T = 0.9
-P_CANCER_T_TEST_F = 0.2
-P_CANCER_F_TEST_T = 0.1
-P_CANCER_F_TEST_F = 0.8
+import bayessian_network as bn
 
 QUERY_REGEX  = "^((test|cancer)( )*){0,2}$"
 EVIDENCE_REGEX = "^((test|cancer)(:)(True|False)( )*){0,2}$"
