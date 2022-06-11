@@ -10,12 +10,39 @@ P_CANCER_T_TEST_F = 0.2
 P_CANCER_F_TEST_T = 0.1
 P_CANCER_F_TEST_F = 0.8
 
-QUERY_REGEX = "^(P{1})(:{1})((C|TT|TF){1})$"
-EVIDENCE_REGEX = "^(((C|T){1})(:{1})((True|False){1}))$|^$"
+QUERY_REGEX  = "^((test|cancer)( )*){0,2}$"
+EVIDENCE_REGEX = "^((test|cancer)(:)(True|False)( )*){0,2}$"
 
-# check params correctess with regex
-def check_parameter(parameter, regex):
-    return re.search(pattern=regex, string=parameter)
+# check query param correctess with regex and return list if correct
+def check_query_parameter(parameter, regex):
+    query_params = ""
+    if re.search(pattern=regex, string=parameter):
+        
+        if parameter.isspace() == False and len(parameter) > 0:
+            query_params =  parameter.split(sep =' ')
+        
+        return query_params
+    
+    return None
+
+# check evidence param correctess with regex and return dictionary if correct
+def check_evidence_parameter(parameter, regex):
+
+    if re.search(pattern=regex, string=parameter):
+        dictionary = {}
+
+        if parameter.isspace() == False and len(parameter) > 0:
+
+            str_dictionary_elements = parameter.split(sep =' ')
+
+            for el in str_dictionary_elements:
+                key, value_str = el.split(sep=':')
+                value = False if value_str == "False" else True
+                dictionary[key] = value
+
+        return dictionary
+    
+    return None
 
 
 def integer_input(prompt = ""):
@@ -33,26 +60,29 @@ def integer_input(prompt = ""):
         return False
 
 def get_program_parameters():
-    query = ""
-    evidence = ""
-    steps_num = 0
-    while check_parameter(query, QUERY_REGEX) == None:
-        print("Provide query in format: P:C/TT/TF.")
-        print("Example: P:TT, for query on probability of true result of test")
-        query = input()
 
     while True:
-        print("(optional) Provide evidence in format: C/T:True/False; to skip evidence press enter.")
-        print("Example: C:True, for evidence of true result of cancer")
-        evidence = input()
+        print("Provide query in the following format for each query subject: query_subject, seperated by space.")
+        print("Example: cancer, for query on probability of cancer.")
+        query_input = input()
 
-        if check_parameter(evidence, EVIDENCE_REGEX) != None:
+        result = check_query_parameter(parameter=query_input, regex=QUERY_REGEX )
+        if result != None:
+            query_list = result
+            break
+
+    while True:
+        print("(optional) Provide evidence in the following format for each evidence element: test:False, seperated by space.")
+        print("Example: cancer:True for evidence of true result of cancer.")
+        evidence_input = input()
+
+        result = check_evidence_parameter(parameter=evidence_input, regex=EVIDENCE_REGEX )
+        if result != None:
+            evidence_dict = result
             break
 
     steps_num = integer_input("Provide (int) number of steps to be performed. \n")
     
-    print(f"Program parameters: \n query: {query} \n evidence: {evidence} \n number of steps : {steps_num}")
+    print(f"Program parameters: \n query: {query_list} \n evidence: {evidence_dict} \n number of steps : {steps_num}")
 
-    return query, evidence, steps_num
-
-get_program_parameters()
+    return query_list, evidence_dict, steps_num
