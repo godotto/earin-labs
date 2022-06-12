@@ -1,23 +1,36 @@
 import re
-import bayessian_network as bn
 
-QUERY_REGEX  = "^((test|cancer)( )*){0,2}$"
+QUERY_REGEX  = "^((test|cancer)( )*){1,2}$"
 EVIDENCE_REGEX = "^((test|cancer)(:)(True|False)( )*){0,2}$"
 
-# check query param correctess with regex and return list if correct
+
 def check_query_parameter(parameter, regex):
+    """
+    Returns query mapped onto a list if it matches provided regex pattern.
+    Otherwise returns None value.
+
+    Parameters:
+    parameter: query to be checked
+    regex: query regex pattern
+    """
     query_params = ""
     if re.search(pattern=regex, string=parameter):
-        
-        if parameter.isspace() == False and len(parameter) > 0:
-            query_params =  parameter.split(sep =' ')
+       
+        query_params =  parameter.split(sep =' ')
         
         return query_params
     
     return None
 
-# check evidence param correctess with regex and return dictionary if correct
 def check_evidence_parameter(parameter, regex):
+    """
+    Returns evidence mapped onto a dictionary if it matches provided regex pattern.
+    Otherwise returns None value. Empty evidence is allowed.
+
+    Parameters:
+    parameter: evidence to be checked
+    regex: evidence regex pattern
+    """
 
     if re.search(pattern=regex, string=parameter):
         dictionary = {}
@@ -51,9 +64,16 @@ def integer_input(prompt = ""):
         return False
 
 def get_program_parameters():
+    """
+    Returns program parameters: query, evidence, number of steps, 
+    provided by the user and validated.
+
+    Parameters:
+    -
+    """
 
     while True:
-        print("Provide query in the following format for each query subject: query_subject, seperated by space.")
+        print("(required) Provide query in the following format for each query subject: query_subject, seperated by space.")
         print("Example: cancer, for query on probability of cancer.")
         query_input = input()
 
@@ -72,8 +92,8 @@ def get_program_parameters():
             evidence_dict = result
             break
 
-    steps_num = integer_input("Provide (int) number of steps to be performed. \n")
+    steps_num = integer_input("(required) Provide number of steps to be performed. \n")
     
-    print(f"Program parameters: \n query: {query_list} \n evidence: {evidence_dict} \n number of steps : {steps_num}")
+    print(f"Program parameters: \n query: {query_list} \n evidence: {evidence_dict} \n number of steps: {steps_num}")
 
     return query_list, evidence_dict, steps_num

@@ -12,6 +12,15 @@ class BayessianNetwork:
         }
 
     def mcmc(self, evidence: dict[str, bool], query: list[str], steps: int):
+        """
+        Returns result of performing Markov chain Monte Carlo algorithm with Gibbs sampling,
+        which is the answer to query in form of probabiblity distribution.
+
+        Parameters:
+        evidence: provided evidence dictionary
+        query: list of queries to be answered
+        steps: number of steps to be performed
+        """
 
         variables = evidence
         unobserved_variables_names = [node for node in self.nodes if node not in evidence]
@@ -40,6 +49,12 @@ class BayessianNetwork:
         return self.__normalize_counters(counters)
 
     def __draw_sample(self, variables: dict[str, bool], selected_variable: str):
+        """
+        Returns values sampled with Markov Blanket(X) where X is the selected variable.
+
+        Parameters:
+        variables: dictionary of all variables.
+        """
         probabilities = []
         
         if selected_variable == "cancer":
@@ -60,6 +75,12 @@ class BayessianNetwork:
         return np.random.choice([False, True], p=probabilities)
 
     def __normalize_counters(self, counters: dict[str, dict[bool, int]]) -> dict[str, dict[bool, float]]:
+        """
+        Returns a dictionary of normalized counters.
+
+        Parameters:
+        counters: dictionary of value counters
+        """
         normalized_counters = {}
 
         for variable_name in counters.keys():
