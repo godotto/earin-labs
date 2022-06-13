@@ -3,6 +3,7 @@ import numpy as np
 
 class BayessianNetwork:
     def __init__(self):
+        # pre-defined probaility distributions
         self.nodes = {
             "cancer": {True: 0.05, False: 0.95},
             "test": {
@@ -40,6 +41,7 @@ class BayessianNetwork:
                 # draw non-observed variable
                 selected_variable = choice(unobserved_variables_names)
 
+                # select new value for the drawed non-observed variable
                 variables[selected_variable] = self.__draw_sample(variables, selected_variable)
 
             # update counters
@@ -57,21 +59,25 @@ class BayessianNetwork:
         """
         probabilities = []
         
+        # variant with checking the node without parents
         if selected_variable == "cancer":
-            probability = self.nodes["cancer"][False]
-            probability *= self.nodes["test"][False][variables["test"]]
-            probabilities.append(probability)
+            # P(X = x_j | Parents(X)) * P(Z_i | Parents(Z_i))
+            for value in [False, True]:
+                probability = self.nodes["cancer"][value]
+                probability *= self.nodes["test"][value][variables["test"]]
+                probabilities.append(probability)
 
-            probability = self.nodes["cancer"][True]
-            probability *= self.nodes["test"][True][variables["test"]]
-            probabilities.append(probability)
-
+            # α = 1 / (Bel(Cancer = T) + Bel(Cancer = F))
             alpha = 1 / sum(probabilities)
-            probabilities = [alpha * p for p in probabilities]
+            probabilities = [alpha * p for p in probabilities] # multiply both beliefs by α
+        
+        # variant with checking the node without children
         else:
+            # P(X = x_j | Parents(X))
             probabilities.append(self.nodes["test"][variables["cancer"]][False])
-            probabilities.append(1 - probabilities[0])
+            probabilities.append(1 - probabilities[0]) # probabilities are simple ones, thus they sum up to 1
 
+        # choose new value for the random variable by roulette strategy
         return np.random.choice([False, True], p=probabilities)
 
     def __normalize_counters(self, counters: dict[str, dict[bool, int]]) -> dict[str, dict[bool, float]]:
@@ -86,7 +92,7 @@ class BayessianNetwork:
         for variable_name in counters.keys():
             counter_sum = sum(counters[variable_name].values())
             normalized_counters[variable_name] = {}
-            normalized_counters[variable_name][True] = counters[variable_name][True] / counter_sum
-            normalized_counters[variable_name][False] = counters[variable_name][False] / counter_sum
+            normalized_counters[variable_name][True] = counters[variable_name][True] / counter_sum      # true_probability = true_count / (true_count + false_count)
+            normalized_counters[variable_name][False] = counters[variable_name][False] / counter_sum    # false_probability = false_count / (true_count + false_count)
 
         return normalized_counters
